@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>BEP-20 UUPS Manager</title>
+  </head>
+  <body>
+    <h2>Deploy Upgradeable BEP-20 (UUPS)</h2>
+    <div>
+      <input id="name" placeholder="Token name" value="My Token" />
+      <input id="symbol" placeholder="Symbol" value="MTK" />
+      <input id="supply" placeholder="Initial supply (tokens)" value="1000000" />
+      <input id="owner" placeholder="Owner address (optional)" />
+      <button id="deployBtn">Deploy Proxy</button>
+    </div>
+    <pre id="out"></pre>
+
+    <h2>Upgrade Proxy</h2>
+    <div>
+      <input id="proxy" placeholder="Proxy address to upgrade" />
+      <button id="upgradeBtn">Upgrade</button>
+    </div>
+
+    <script>
+      const out = document.getElementById('out');
+      document.getElementById('deployBtn').onclick = async () => {
+        out.textContent = 'Deploying...';
+        const res = await fetch('/deploy', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            tokenName: document.getElementById('name').value,
+            tokenSymbol: document.getElementById('symbol').value,
+            initialSupply: document.getElementById('supply').value,
+            ownerAddress: document.getElementById('owner').value,
+            network: 'bscTestnet'
+          })
+        });
+        out.textContent = await res.text();
+      };
+      document.getElementById('upgradeBtn').onclick = async () => {
+        out.textContent = 'Upgrading...';
+        const res = await fetch('/upgrade', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            proxyAddress: document.getElementById('proxy').value,
+            network: 'bscTestnet'
+          })
+        });
+        out.textContent = await res.text();
+      };
+    </script>
+  </body>
+</html>
